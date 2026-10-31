@@ -1,0 +1,41 @@
+{
+  "format": 1,
+  "files": {
+    ".gitignore": {
+      "bytes": 32,
+      "sha256": "5448acac5551c58ffa54869f8c58f47be38d605f80b68e15ae141288963d7305"
+    },
+    "example.py": {
+      "bytes": 2266,
+      "sha256": "fdc5e588d37a5a536426090d6895e6eaf4c4591d51bed8aae728cb22f7c62d9f"
+    },
+    "hearthline.py": {
+      "bytes": 62943,
+      "sha256": "2f6d7360d94ccc0c088d117e060dbe31ebe22f3e94c40680189acef300b9ab5c"
+    },
+    "learning.py": {
+      "bytes": 5269,
+      "sha256": "3167aeb3f4639d77c84bc3e56ea4a76634033cdf5c9e7dbfc17dd7715bb3f2f8"
+    },
+    "llms.txt": {
+      "bytes": 3606,
+      "sha256": "9ca4e0cd23c18edb477a20d8701eaf00ffd311d6b9b0880b4d7df4aefe0d394c"
+    },
+    "models.json": {
+      "bytes": 3164562,
+      "sha256": "e251cd9e1384cc3f1d92076f3c1ab4e25f31b7a03f78823cf635999c88110862"
+    },
+    "README.md": {
+      "bytes": 7086,
+      "sha256": "a50417595dab5ea809c9ebb694b80cc4e09887a5c03cd6a40dac1f19e9b07862"
+    },
+    "requirements.txt": {
+      "bytes": 15,
+      "sha256": "105a25c9a24a53a42b52ccc93f930e1ea4a88b42372d440ae7c1b82c3a8b2c64"
+    },
+    "train.py": {
+      "bytes": 6748,
+      "sha256": "fb2be03fa789d983afc2e60e6ae2a837ebf2530ff0d94124edf7024f63b3a75c"
+    }
+  }
+}

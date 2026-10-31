@@ -1,0 +1,19 @@
+# Hearthline native Python agent guide
+
+Use hearthline.py: a native Python rules engine and in-process/JSONL server. There is no Node.js, embedded JavaScript or subprocess dependency. Python 3.10+ is enough for heuristic games; install requirements.txt (NumPy only) for trained models and training. README.md contains the protocol.
+
+Game: two factions on a mirrored 8x8 board, with private base placement and up to three sealed commands per turn, one per unit. Both sides resolve together. Jobs persist: workers travel to resources/farms, work, carry cargo home, then deliver it. Replacement work can queue until delivery. Farms grow, are harvested, then need wood to renew; one worker owns each assigned plot. Soldiers move toward destinations or assault the enemy hearth. Capacity, traffic, walls and simultaneous damage affect movement/combat. Living troops consume fractional pooled food upkeep. Hearth destruction or starvation decides a win; the default 80-turn limit is a draw. Query result instead of guessing victory logic.
+
+Run python example.py --games 20 to generate matches.json, retain decisive games in winners.json and train new-model.json under runs/example. Keep both sides' orders in winning matches; training selects only the actual winner's decisions. Draws/unfinished games supply no examples. Import match files in the HTML's Match archive and model files in Trained models.
+
+Direct API: from hearthline import EngineClient. With EngineClient() as game, call game.request("simulate",config={"mapSeed":"demo","policies":["balanced","rush"]}). Save result["collection"]. This is local Python, not a client for an external executable.
+
+For an external agent: start with policies:["external","rush"]. legal with side:0,prefix:[] returns normalized observation/tokens plus aligned legal IDs and original-board action objects. Choose an action, append it to your private prefix, and query again to reserve costs/sites/units. Wait/ID 0 terminates the list; do not append wait to other actions. step with orders:[prefix,null] seals your list and requests the other AI's private turn. [] passes. Never resolve one faction before choosing the other faction's commands. export returns the active partial/complete collection. info describes current versions/defaults; load_models registers a model envelope and returns IDs to select. export_models can extract a single baseline from combined models.json.
+
+Stdio: python hearthline.py reads UTF-8 JSON lines {id,op,...} and writes {id,ok:true,data} or {id,ok:false,error}. No HTTP/network/account is involved.
+
+Match format: {format:"hearthline-matches",version:1,meta:{},matches:[{config,initial,orders,entrants}]}. One match is a list of one. Initial state and paired orders reconstruct the replay; frames/results are derived. entrants maps colors to contestants, reversed for mirrored legs. Match seeds, bases, parameters and rules must agree with the initial state.
+
+Model format: {format:1,models:{Name:entry}}. models.json bundles exact V1-V5 weights in that format; python hearthline.py --export-model V4 --output V4.json extracts one. Weights are named base64 little-endian float32 tensors with shapes. Use the supplied exports as templates.
+
+Train: python train.py winners.json --name Custom --output custom.json. To fine-tune: add --init models.json --init-model V4. learning.py supplies NumPy MicroGPT/Adam. Legal masking, friendly-side rotation, command prefixes and stop labels are native Python. Mixed parameter snapshots are rejected. Evaluate new policies on held-out seeds; winner imitation alone does not guarantee improvement.
